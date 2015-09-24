@@ -15,14 +15,14 @@ package object quantity {
   case class Quantity[U <: UnitSystem[U]](coeff: Double, unit: U) {
 
     def +(other: Quantity[U]): Quantity[U] = {
-      if(unit != other.unit)
+      if (unit != other.unit)
         throw new QuantityException("Mismatched units in +")
       else
         Quantity(coeff + other.coeff, unit)
     }
 
     def -(other: Quantity[U]): Quantity[U] = {
-      if(unit != other.unit)
+      if (unit != other.unit)
         throw new QuantityException("Mismatched units in -")
       else
         Quantity(coeff - other.coeff, unit)
@@ -45,7 +45,7 @@ package object quantity {
     def unary_- : Quantity[U] = Quantity(-coeff, unit)
 
     def <(other: Quantity[U]): Boolean = {
-      if(unit != other.unit)
+      if (unit != other.unit)
         throw new QuantityException("Cannot compare quantities with different units")
       else
         coeff < other.coeff
@@ -54,7 +54,7 @@ package object quantity {
     def <=(other: Quantity[U]): Boolean = (this == other) || (this < other)
 
     def >(other: Quantity[U]): Boolean = {
-      if(unit != other.unit)
+      if (unit != other.unit)
         throw new QuantityException("Cannot compare quantities with different units")
       else
         coeff > other.coeff
@@ -70,7 +70,7 @@ package object quantity {
     def apply(f: Double => Double): Quantity[U] = Quantity(f(coeff), unit)
 
     override def toString = {
-      if(unit.isUnitless)
+      if (unit.isUnitless)
         coeff.toString
       else
         coeff.toString + " " + unit.toString

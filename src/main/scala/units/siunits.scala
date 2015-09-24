@@ -12,41 +12,71 @@ package object siunits {
    * Class to represent an SI unit. The fields are the powers of the base units
    * that make up the current unit.
    */
-  case class SIUnit(m: Int, kg: Int, s: Int, a: Int, k: Int,
-                    mol: Int, cd: Int) extends UnitSystem[SIUnit] {
+  case class SIUnit(
+    m: Int,
+    kg: Int,
+    s: Int,
+    a: Int,
+    k: Int,
+    mol: Int,
+    cd: Int) extends UnitSystem[SIUnit] {
 
-    def isUnitless: Boolean = List(m == 0, kg == 0, s == 0, a == 0, k == 0,
-                                   mol == 0, cd == 0).reduce(_ && _)
+    def isUnitless: Boolean = List(m == 0,
+                                   kg == 0,
+                                   s == 0,
+                                   a == 0,
+                                   k == 0,
+                                   mol == 0,
+                                   cd == 0).reduce(_ && _)
 
-    def ==(other: SIUnit): Boolean =
-      List(m == other.m, kg == other.kg, s == other.s, a == other.a,
-           k == other.k, mol == other.mol, cd == other.cd).reduce(_ && _)
+    def ==(other: SIUnit): Boolean = List(m == other.m,
+                                          kg == other.kg,
+                                          s == other.s,
+                                          a == other.a,
+                                          k == other.k,
+                                          mol == other.mol,
+                                          cd == other.cd).reduce(_ && _)
 
-    def *(other: SIUnit): SIUnit =
-      SIUnit(m + other.m, kg + other.kg, s + other.s, a + other.a,
-             k + other.k, mol + other.mol, cd + other.cd)
+    def *(other: SIUnit): SIUnit = SIUnit(m + other.m,
+                                          kg + other.kg,
+                                          s + other.s,
+                                          a + other.a,
+                                          k + other.k,
+                                          mol + other.mol,
+                                          cd + other.cd)
 
-    def /(other: SIUnit): SIUnit =
-      SIUnit(m - other.m, kg - other.kg, s - other.s, a - other.a,
-             k - other.k, mol - other.mol, cd - other.cd)
+    def /(other: SIUnit): SIUnit = SIUnit(m - other.m,
+                                          kg - other.kg,
+                                          s - other.s,
+                                          a - other.a,
+                                          k - other.k,
+                                          mol - other.mol,
+                                          cd - other.cd)
 
-    def pow(n: Int): SIUnit = SIUnit(n * m, n * kg, n * s, n * a, n * k,
-                                     n * mol, n * cd)
+    def pow(n: Int): SIUnit = SIUnit(n * m,
+                                     n * kg,
+                                     n * s,
+                                     n * a,
+                                     n * k,
+                                     n * mol,
+                                     n * cd)
 
     override def toString = {
       val powers = List(m, kg, s, a, k, mol, cd)
       val symbols = List("m", "kg", "s", "A", "K", "mol", "cd")
 
       def asStr(power: Int, symbol: String): String = {
-        if(power == 1)
+        if (power == 1)
           symbol
         else
           symbol ++ "^" ++ power.toString
       }
 
       var combined = powers.zip(symbols)
-      combined = combined.filter{ _._1 != 0 }
-      val init = combined.init.map{ x => asStr(x._1, x._2) + " " } .foldLeft(""){_+_}
+      combined = combined filter (_._1 != 0)
+
+      val inits = combined.init map (x => asStr(x._1, x._2) + " ")
+      val init = inits.foldLeft("")(_+_)
 
       val last = combined.last
       init + asStr(last._1, last._2)
