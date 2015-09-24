@@ -77,4 +77,9 @@ package object quantity {
     }
   }
 
+  implicit class Ops(lhs: Double) {
+    def *[U <: UnitSystem[U]](rhs: Quantity[U]) = rhs * lhs
+    def /[U <: UnitSystem[U]](rhs: Quantity[U]) = rhs.pow(-1) * lhs
+  }
+
 }

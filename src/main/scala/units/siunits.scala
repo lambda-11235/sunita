@@ -83,8 +83,8 @@ package object siunits {
     }
   }
 
-  implicit def int2SIQuant(x: Int) = siUnitless * x.toDouble
-  implicit def double2SIQuant(x: Double) = siUnitless * x
+  //implicit def int2SIQuant(x: Int) = siUnitless * x.toDouble
+  //implicit def double2SIQuant(x: Double) = siUnitless * x
 
   // SI prefixes
   def yotta(q: Quantity[SIUnit]) = q * 1e24
