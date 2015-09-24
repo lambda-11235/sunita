@@ -4,13 +4,13 @@ package units.unitsystem
 /**
  * A trait for all unit systems.
  */
-trait UnitSystem[U] {
-  def unitless: U
+trait UnitSystem[U <: UnitSystem[U]] {
+  def isUnitless: Boolean
 
-  def unitEq(a: U, b: U): Boolean
-  def unitMul(a: U, b: U): U
-  def unitDiv(a: U, b: U): U
-  def unitPow(a: U, n: Int): U
+  def ==(other: U): Boolean
+  def *(other: U): U
+  def /(other: U): U
+  def pow(n: Int): U
 
-  def unitNotEq(a: U, b: U): Boolean = !unitEq(a, b)
+  def !=(other: U): Boolean = !(this == other)
 }

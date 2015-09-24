@@ -2,6 +2,5 @@
 TODO
 ====
 
-* Make Quantity fractional, instead of overriding for all units like with
-  SIQuantityIsFractional.
+* Make Quantity fractional.
 * Add conversion for the U.S. customary system.

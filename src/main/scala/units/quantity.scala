@@ -12,27 +12,33 @@ package object quantity {
   /**
    * Represents a quantity, which is a unit multiplied by a coefficient.
    */
-  case class Quantity[U](coeff: Double, unit: U)(implicit usys: UnitSystem[U]) {
+  case class Quantity[U <: UnitSystem[U]](coeff: Double, unit: U) {
 
     def +(other: Quantity[U]): Quantity[U] = {
-      if(usys.unitNotEq(unit, other.unit))
+      if(unit != other.unit)
         throw new QuantityException("Mismatched units in +")
       else
         Quantity(coeff + other.coeff, unit)
     }
 
     def -(other: Quantity[U]): Quantity[U] = {
-      if(usys.unitNotEq(unit, other.unit))
-        throw new QuantityException("Mismatched units in +")
+      if(unit != other.unit)
+        throw new QuantityException("Mismatched units in -")
       else
         Quantity(coeff - other.coeff, unit)
     }
 
     def *(other: Quantity[U]): Quantity[U] =
-      Quantity(coeff * other.coeff, usys.unitMul(unit, other.unit))
+      Quantity(coeff * other.coeff, unit * other.unit)
+
+    def *(other: Double): Quantity[U] =
+      Quantity(coeff * other, unit)
 
     def /(other: Quantity[U]): Quantity[U] =
-      Quantity(coeff / other.coeff, usys.unitDiv(unit, other.unit))
+      Quantity(coeff / other.coeff, unit / other.unit)
+
+    def /(other: Double): Quantity[U] =
+      Quantity(coeff / other, unit)
 
     def unary_+ : Quantity[U] = this
 
@@ -56,32 +62,19 @@ package object quantity {
 
     def >=(other: Quantity[U]): Boolean = (this == other) || (this > other)
 
-    def pow(n: Int): Quantity[U] =
-      Quantity(math.pow(coeff, n), usys.unitPow(unit, n))
+    def pow(n: Int): Quantity[U] = Quantity(math.pow(coeff, n), unit.pow(n))
 
     /**
      * Applies a function to the coefficient of this unit.
      */
-    def applyCoeff(f: Double => Double): Quantity[U] = Quantity(f(coeff), unit)
+    def apply(f: Double => Double): Quantity[U] = Quantity(f(coeff), unit)
 
     override def toString = {
-      if(usys.unitEq(unit, usys.unitless))
+      if(unit.isUnitless)
         coeff.toString
       else
         coeff.toString + " " + unit.toString
     }
   }
-
-  implicit def int2quant[U](i: Int)(implicit usys: UnitSystem[U]) =
-    Quantity(i.toDouble, usys.unitless)
-
-  implicit def double2quant[U](d: Double)(implicit usys: UnitSystem[U]) =
-    Quantity(d, usys.unitless)
-
-  implicit def unit2quant[U](u: U)(implicit usys: UnitSystem[U]) =
-    Quantity(1, u)
-
-  // Some useful quantities for all unit systems
-  def pi[U](implicit usys: UnitSystem[U]): Quantity[U] = double2quant(math.Pi)
 
 }

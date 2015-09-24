@@ -1,6 +1,8 @@
 
 package units
 
+import scala.math.Pi
+
 import units.siunits._
 import units.quantity._
 
@@ -23,12 +25,13 @@ package object constants {
 
   val gravConst = 6.67428e-11 * newton*(meter pow 2)/(kilogram pow 2)
 
-  val permeabilityOfFS = (4*pi)*(1e-7) * tesla*meter/ampere
+  val permeabilityOfFS = (4*Pi)*(1e-7) * tesla*meter/ampere
   val permittivityOfFS = 1/(permeabilityOfFS * (speedOfLight pow 2))
-  val coulombConst = 1/(4*pi * permittivityOfFS)
+  val coulombConst = 1/(4*Pi * permittivityOfFS)
 
   /* ****** Earth Constants ******* */
   val earthRadius = 6.371e6 * meter
   val earthMass = 5.972e24 * kilogram
+  val gee = 9.80665 * meter / (second pow 2)
 
 }

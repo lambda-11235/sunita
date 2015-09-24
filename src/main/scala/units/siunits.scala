@@ -1,6 +1,8 @@
 
 package units
 
+import scala.language.implicitConversions
+
 import units.quantity._
 import units.unitsystem._
 
@@ -11,7 +13,14 @@ package object siunits {
    * that make up the current unit.
    */
   case class SIUnit(m: Int, kg: Int, s: Int, a: Int, k: Int,
-                    mol: Int, cd: Int) {
+                    mol: Int, cd: Int) extends UnitSystem[SIUnit] {
+
+    def isUnitless: Boolean = List(m == 0, kg == 0, s == 0, a == 0, k == 0,
+                                   mol == 0, cd == 0).reduce(_ && _)
+
+    def ==(other: SIUnit): Boolean =
+      List(m == other.m, kg == other.kg, s == other.s, a == other.a,
+           k == other.k, mol == other.mol, cd == other.cd).reduce(_ && _)
 
     def *(other: SIUnit): SIUnit =
       SIUnit(m + other.m, kg + other.kg, s + other.s, a + other.a,
@@ -44,62 +53,31 @@ package object siunits {
     }
   }
 
-  implicit object SIUnitSystem extends UnitSystem[SIUnit] {
-    def unitless: SIUnit = SIUnit(0, 0, 0, 0, 0, 0, 0)
-
-    def unitEq(a: SIUnit, b: SIUnit): Boolean = a == b
-    def unitMul(a: SIUnit, b: SIUnit): SIUnit = a * b
-    def unitDiv(a: SIUnit, b: SIUnit): SIUnit = a / b
-    def unitPow(a: SIUnit, n: Int): SIUnit = a pow n
-  }
-
-  implicit object SIQuantityIsFractional extends Fractional[Quantity[SIUnit]] {
-    def compare(x: Quantity[SIUnit], y: Quantity[SIUnit]): Int = {
-      if(x == y)
-        0
-      else if(x < y)
-        -1
-      else
-        1
-    }
-
-    def fromInt(x: Int): Quantity[SIUnit] = Quantity(x.toDouble, SIUnit(0,0,0,0,0,0,0))
-
-    def plus(x: Quantity[SIUnit], y: Quantity[SIUnit]): Quantity[SIUnit] = x + y
-    def minus(x: Quantity[SIUnit], y: Quantity[SIUnit]): Quantity[SIUnit] = x - y
-    def times(x: Quantity[SIUnit], y: Quantity[SIUnit]): Quantity[SIUnit] = x * y
-    def div(x: Quantity[SIUnit], y: Quantity[SIUnit]): Quantity[SIUnit] = x / y
-
-    def negate(x: Quantity[SIUnit]): Quantity[SIUnit] = -x
-
-    def toDouble(x: Quantity[SIUnit]): Double = x.coeff
-    def toFloat(x: Quantity[SIUnit]): Float = x.coeff.toFloat
-    def toInt(x: Quantity[SIUnit]): Int = x.coeff.toInt
-    def toLong(x: Quantity[SIUnit]): Long = x.coeff.toLong
-  }
+  implicit def int2SIQuant(x: Int) = siUnitless * x.toDouble
+  implicit def double2SIQuant(x: Double) = siUnitless * x
 
   // SI prefixes
-  def yotta[U](q: Quantity[U])(implicit usys: UnitSystem[U]) = q * 1e24
-  def zetta[U](q: Quantity[U])(implicit usys: UnitSystem[U]) = q * 1e21
-  def exa[U](q: Quantity[U])(implicit usys: UnitSystem[U]) = q * 1e18
-  def peta[U](q: Quantity[U])(implicit usys: UnitSystem[U]) = q * 1e15
-  def tera[U](q: Quantity[U])(implicit usys: UnitSystem[U]) = q * 1e12
-  def giga[U](q: Quantity[U])(implicit usys: UnitSystem[U]) = q * 1e9
-  def mega[U](q: Quantity[U])(implicit usys: UnitSystem[U]) = q * 1e6
-  def kilo[U](q: Quantity[U])(implicit usys: UnitSystem[U]) = q * 1e3
-  def hecto[U](q: Quantity[U])(implicit usys: UnitSystem[U]) = q * 1e2
-  def deka[U](q: Quantity[U])(implicit usys: UnitSystem[U]) = q * 1e1
+  def yotta(q: Quantity[SIUnit]) = q * 1e24
+  def zetta(q: Quantity[SIUnit]) = q * 1e21
+  def exa(q: Quantity[SIUnit]) = q * 1e18
+  def peta(q: Quantity[SIUnit]) = q * 1e15
+  def tera(q: Quantity[SIUnit]) = q * 1e12
+  def giga(q: Quantity[SIUnit]) = q * 1e9
+  def mega(q: Quantity[SIUnit]) = q * 1e6
+  def kilo(q: Quantity[SIUnit]) = q * 1e3
+  def hecto(q: Quantity[SIUnit]) = q * 1e2
+  def deka(q: Quantity[SIUnit]) = q * 1e1
 
-  def deci[U](q: Quantity[U])(implicit usys: UnitSystem[U]) = q * 1e-1
-  def centi[U](q: Quantity[U])(implicit usys: UnitSystem[U]) = q * 1e-2
-  def milli[U](q: Quantity[U])(implicit usys: UnitSystem[U]) = q * 1e-3
-  def micro[U](q: Quantity[U])(implicit usys: UnitSystem[U]) = q * 1e-6
-  def nano[U](q: Quantity[U])(implicit usys: UnitSystem[U]) = q * 1e-9
-  def pico[U](q: Quantity[U])(implicit usys: UnitSystem[U]) = q * 1e-12
-  def femto[U](q: Quantity[U])(implicit usys: UnitSystem[U]) = q * 1e-15
-  def atto[U](q: Quantity[U])(implicit usys: UnitSystem[U]) = q * 1e-18
-  def zepto[U](q: Quantity[U])(implicit usys: UnitSystem[U]) = q * 1e-21
-  def yocto[U](q: Quantity[U])(implicit usys: UnitSystem[U]) = q * 1e-24
+  def deci(q: Quantity[SIUnit]) = q * 1e-1
+  def centi(q: Quantity[SIUnit]) = q * 1e-2
+  def milli(q: Quantity[SIUnit]) = q * 1e-3
+  def micro(q: Quantity[SIUnit]) = q * 1e-6
+  def nano(q: Quantity[SIUnit]) = q * 1e-9
+  def pico(q: Quantity[SIUnit]) = q * 1e-12
+  def femto(q: Quantity[SIUnit]) = q * 1e-15
+  def atto(q: Quantity[SIUnit]) = q * 1e-18
+  def zepto(q: Quantity[SIUnit]) = q * 1e-21
+  def yocto(q: Quantity[SIUnit]) = q * 1e-24
 
   // Base units
   val siUnitless = Quantity(1, SIUnit(0, 0, 0, 0, 0, 0, 0))
@@ -113,7 +91,7 @@ package object siunits {
 
   // Derived units
 
-  val gram: Quantity[SIUnit] = kilogram/1000
+  //val gram: Quantity[SIUnit] = kilogram/1000
   val radian = siUnitless
   val steradian = siUnitless
   val hertz = second pow (-1)
