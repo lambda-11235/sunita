@@ -119,9 +119,16 @@ package object siunits {
   val mole = Quantity(1, SIUnit(0, 0, 0, 0, 0, 1, 0))
   val candela = Quantity(1, SIUnit(0, 0, 0, 0, 0, 0, 1))
 
+  // Base unit multiples
+  val gram: Quantity[SIUnit] = kilogram/1000
+  val minute = 60 * second
+  val hour = 60 * minute
+  val day = 24 * hour
+  val leapYear = 366 * day
+  val year = 365 * day
+
   // Derived units
 
-  //val gram: Quantity[SIUnit] = kilogram/1000
   val radian = siUnitless
   val steradian = siUnitless
   val hertz = second pow (-1)
