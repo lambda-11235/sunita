@@ -78,11 +78,8 @@ package object siunits {
       var combined = powers.zip(symbols)
       combined = combined filter (_._1 != 0)
 
-      val inits = combined.init map (x => asStr(x._1, x._2) + " ")
-      val init = inits.foldLeft("")(_+_)
-
-      val last = combined.last
-      init + asStr(last._1, last._2)
+      val strs = combined map (x => asStr(x._1, x._2))
+      strs.mkString(" ")
     }
   }
   // SI prefixes
