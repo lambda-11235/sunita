@@ -65,9 +65,9 @@ package object quantity {
     def pow(n: Int): Quantity[U] = Quantity(math.pow(coeff, n), unit.pow(n))
 
     /**
-     * Applies a function to the coefficient of this unit.
+     * Maps a function to the coefficient of this unit.
      */
-    def apply(f: Double => Double): Quantity[U] = Quantity(f(coeff), unit)
+    def map(f: Double => Double): Quantity[U] = Quantity(f(coeff), unit)
 
     override def toString = {
       if (unit.isUnitless)
