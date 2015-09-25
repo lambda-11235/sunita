@@ -4,7 +4,7 @@ package units
 import scala.language.implicitConversions
 
 import units.quantity._
-import units.unitsystem._
+import units.unit._
 
 package object siunits {
 
@@ -19,7 +19,7 @@ package object siunits {
     a: Int,
     k: Int,
     mol: Int,
-    cd: Int) extends UnitSystem[SIUnit] {
+    cd: Int) extends Unit[SIUnit] {
 
     def isUnitless: Boolean = List(m == 0,
                                    kg == 0,
@@ -53,6 +53,9 @@ package object siunits {
                                           mol - other.mol,
                                           cd - other.cd)
 
+    /**
+     * Raises this unit to the nth power.
+     */
     def pow(n: Int): SIUnit = SIUnit(n * m,
                                      n * kg,
                                      n * s,
@@ -82,10 +85,6 @@ package object siunits {
       init + asStr(last._1, last._2)
     }
   }
-
-  //implicit def int2SIQuant(x: Int) = siUnitless * x.toDouble
-  //implicit def double2SIQuant(x: Double) = siUnitless * x
-
   // SI prefixes
   def yotta(q: Quantity[SIUnit]) = q * 1e24
   def zetta(q: Quantity[SIUnit]) = q * 1e21

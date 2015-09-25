@@ -6,7 +6,10 @@ import scala.math.Pi
 import units.siunits._
 import units.quantity._
 
-package object constants {
+/**
+ * Various physical constants in SI units.
+ */
+object constants {
 
   val avogodrosNum = 6.02214179e23 / mole
 
@@ -32,6 +35,8 @@ package object constants {
   /* ****** Earth Constants ******* */
   val earthRadius = 6.371e6 * meter
   val earthMass = 5.972e24 * kilogram
+
+  /** Acceleration due to gravity on Earth. */
   val gee = 9.80665 * meter / (second pow 2)
 
 }

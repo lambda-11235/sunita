@@ -1,10 +1,11 @@
 
-package units.unitsystem
+package units.unit
 
 /**
- * A trait for all unit systems.
+ * A trait that all unit systems should extend.
  */
-trait UnitSystem[U <: UnitSystem[U]] {
+trait Unit[U <: Unit[U]] {
+  /** Returns true is this unit has no dimension. */
   def isUnitless: Boolean
 
   def ==(other: U): Boolean

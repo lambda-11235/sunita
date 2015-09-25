@@ -3,7 +3,7 @@ package units
 
 import scala.language.implicitConversions
 
-import units.unitsystem._
+import units.unit._
 
 package object quantity {
 
@@ -12,7 +12,7 @@ package object quantity {
   /**
    * Represents a quantity, which is a unit multiplied by a coefficient.
    */
-  case class Quantity[U <: UnitSystem[U]](coeff: Double, unit: U) {
+  case class Quantity[U <: Unit[U]](coeff: Double, unit: U) {
 
     def +(other: Quantity[U]): Quantity[U] = {
       if (unit != other.unit)
@@ -62,6 +62,9 @@ package object quantity {
 
     def >=(other: Quantity[U]): Boolean = (this == other) || (this > other)
 
+    /**
+     * Raises this quantity to the nth power.
+     */
     def pow(n: Int): Quantity[U] = Quantity(math.pow(coeff, n), unit.pow(n))
 
     /**
@@ -77,9 +80,12 @@ package object quantity {
     }
   }
 
+  /**
+   * Constructs multiplicativ operations between a double and quantity.
+   */
   implicit class Ops(lhs: Double) {
-    def *[U <: UnitSystem[U]](rhs: Quantity[U]) = rhs * lhs
-    def /[U <: UnitSystem[U]](rhs: Quantity[U]) = rhs.pow(-1) * lhs
+    def *[U <: Unit[U]](rhs: Quantity[U]) = rhs * lhs
+    def /[U <: Unit[U]](rhs: Quantity[U]) = rhs.pow(-1) * lhs
   }
 
 }
