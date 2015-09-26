@@ -1,0 +1,26 @@
+apply plugin: 'scala'
+
+version = '0.1.0'
+description = "The units package is a package for doing dimensional analysis in Scala."
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': name,
+                   'Implementation-Version': version
+    }
+}
+
+compileScala {
+    zincClasspath = files('/usr/share/java/scala-compiler.jar')
+}
+
+repositories {
+    flatDir {
+        dirs '/usr/share/java'
+    }
+}
+
+dependencies {
+    compile 'org.scala:scala-compiler:2.11'
+    compile 'org.scala:scala-library:2.11'
+}
