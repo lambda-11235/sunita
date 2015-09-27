@@ -11,7 +11,7 @@ import units.quantity._
  */
 object constants {
 
-  val avogodrosConst = 6.02214179e23 / mole
+  val avogadrosConst = 6.02214179e23 / mole
 
   val speedOfLight = 2.99792458e8 * meter/second
 

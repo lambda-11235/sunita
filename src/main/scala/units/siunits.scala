@@ -53,9 +53,6 @@ package object siunits {
                                           mol - other.mol,
                                           cd - other.cd)
 
-    /**
-     * Raises this unit to the nth power.
-     */
     def pow(n: Int): SIUnit = SIUnit(n * m,
                                      n * kg,
                                      n * s,
@@ -63,6 +60,18 @@ package object siunits {
                                      n * k,
                                      n * mol,
                                      n * cd)
+
+    def nroot(n: Int): Option[SIUnit] = {
+      var params = List(m, kg, s, a, k, mol, cd)
+
+      if(params.forall(_ % n == 0)) {
+        params = params map (_/n)
+        Some(SIUnit(params(0), params(1), params(2), params(3), params(4),
+                    params(5), params(6)))
+      } else {
+        None
+      }
+    }
 
     override def toString = {
       val powers = List(m, kg, s, a, k, mol, cd)
