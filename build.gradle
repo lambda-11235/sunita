@@ -1,6 +1,6 @@
 apply plugin: 'scala'
 
-version = '0.1.0'
+version = '0.2.0'
 description = "The units package is a package for doing dimensional analysis in Scala."
 
 jar {

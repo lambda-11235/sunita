@@ -19,15 +19,7 @@ package object siunits {
     a: Int,
     k: Int,
     mol: Int,
-    cd: Int) extends Unit[SIUnit] {
-
-    def isUnitless: Boolean = List(m == 0,
-                                   kg == 0,
-                                   s == 0,
-                                   a == 0,
-                                   k == 0,
-                                   mol == 0,
-                                   cd == 0).reduce(_ && _)
+    cd: Int) {
 
     def ==(other: SIUnit): Boolean = List(m == other.m,
                                           kg == other.kg,
@@ -61,6 +53,14 @@ package object siunits {
                                      n * mol,
                                      n * cd)
 
+
+    /**
+     * Tries to take the nth root of an SI unit.
+     *
+     * @param n The root to take (2 for the square root).
+     *
+     * @return The resulting unit if possible, otherwise None.
+     */
     def nroot(n: Int): Option[SIUnit] = {
       var params = List(m, kg, s, a, k, mol, cd)
 
@@ -91,6 +91,21 @@ package object siunits {
       strs.mkString(" ")
     }
   }
+
+  implicit object SIUnitIsUnit extends Unit[SIUnit] {
+    def unitless = SIUnit(0, 0, 0, 0, 0, 0, 0)
+
+    def eq(lhs: SIUnit, rhs: SIUnit) = rhs == lhs
+
+    def mult(lhs: SIUnit, rhs: SIUnit) = lhs * rhs
+
+    def div(lhs: SIUnit, rhs: SIUnit) = lhs / rhs
+
+    def pow(u: SIUnit, n: Int) = u.pow(n)
+
+    def nroot(u: SIUnit, n: Int) = u.nroot(n)
+  }
+
   // SI prefixes
   def yotta(q: Quantity[SIUnit]) = q * 1e24
   def zetta(q: Quantity[SIUnit]) = q * 1e21

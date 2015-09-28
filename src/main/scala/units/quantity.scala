@@ -4,6 +4,7 @@ package units
 import scala.language.implicitConversions
 
 import units.unit._
+import units.unit.Unit.Implicits._
 
 package object quantity {
 
@@ -12,20 +13,13 @@ package object quantity {
   /**
    * Represents a quantity, which is a unit multiplied by a coefficient.
    */
-  case class Quantity[U <: Unit[U]](coeff: Double, unit: U) {
+  case class Quantity[U](coeff: Double, unit: U)(implicit impUnit: Unit[U]) {
 
     def +(other: Quantity[U]): Quantity[U] = {
       if (unit != other.unit)
         throw new QuantityException("Mismatched units in +")
       else
         Quantity(coeff + other.coeff, unit)
-    }
-
-    def +(other: Double): Quantity[U] = {
-      if (! unit.isUnitless)
-        throw new QuantityException("Mismatched units in +")
-      else
-        Quantity(coeff + other, unit)
     }
 
     def -(other: Quantity[U]): Quantity[U] = {
@@ -35,24 +29,11 @@ package object quantity {
         Quantity(coeff - other.coeff, unit)
     }
 
-    def -(other: Double): Quantity[U] = {
-      if (! unit.isUnitless)
-        throw new QuantityException("Mismatched units in -")
-      else
-        Quantity(coeff - other, unit)
-    }
-
     def *(other: Quantity[U]): Quantity[U] =
       Quantity(coeff * other.coeff, unit * other.unit)
 
-    def *(other: Double): Quantity[U] =
-      Quantity(coeff * other, unit)
-
     def /(other: Quantity[U]): Quantity[U] =
       Quantity(coeff / other.coeff, unit / other.unit)
-
-    def /(other: Double): Quantity[U] =
-      Quantity(coeff / other, unit)
 
     def unary_+ : Quantity[U] = this
 
@@ -118,14 +99,10 @@ package object quantity {
     }
   }
 
-  /**
-   * Constructs multiplicativ operations between a double and quantity.
-   */
-  implicit class Ops(lhs: Double) {
-    def +[U <: Unit[U]](rhs: Quantity[U]) = rhs + lhs
-    def -[U <: Unit[U]](rhs: Quantity[U]) = (-rhs) + lhs
-    def *[U <: Unit[U]](rhs: Quantity[U]) = rhs * lhs
-    def /[U <: Unit[U]](rhs: Quantity[U]) = rhs.pow(-1) * lhs
-  }
+  implicit def int2quant[U](x: Int)(implicit unit: Unit[U]): Quantity[U] =
+    Quantity(x.toDouble, unit.unitless)
+
+  implicit def double2quant[U](x: Double)(implicit unit: Unit[U]): Quantity[U] =
+    Quantity(x, unit.unitless)
 
 }
