@@ -2,7 +2,7 @@
 package units.unit
 
 /**
- * A trait that all unit systems should extend.
+ * A trait that all unit systems should implicitly extend.
  */
 trait Unit[U] {
   /** Returns true is this unit has no dimension. */

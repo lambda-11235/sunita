@@ -8,25 +8,31 @@ import units.unit.Unit.Implicits._
 
 package object quantity {
 
-  class QuantityException(message: String) extends RuntimeException(message) {}
+  class QuantityException(mesg: String) extends RuntimeException(mesg)
 
   /**
    * Represents a quantity, which is a unit multiplied by a coefficient.
    */
   case class Quantity[U](coeff: Double, unit: U)(implicit impUnit: Unit[U]) {
 
+    /**
+     * @throws IllegalArgumentException If the unit of other is not the same as
+     *                                  this class.
+     */
     def +(other: Quantity[U]): Quantity[U] = {
-      if (unit != other.unit)
-        throw new QuantityException("Mismatched units in +")
-      else
-        Quantity(coeff + other.coeff, unit)
+      require(unit != other.unit, "Mismatched units in +")
+
+      Quantity(coeff + other.coeff, unit)
     }
 
+    /**
+     * @throws IllegalArgumentException If the unit of other is not the same as
+     *                                  this class.
+     */
     def -(other: Quantity[U]): Quantity[U] = {
-      if (unit != other.unit)
-        throw new QuantityException("Mismatched units in -")
-      else
-        Quantity(coeff - other.coeff, unit)
+      require(unit != other.unit, "Mismatched units in -")
+
+      Quantity(coeff - other.coeff, unit)
     }
 
     def *(other: Quantity[U]): Quantity[U] =
@@ -39,22 +45,36 @@ package object quantity {
 
     def unary_- : Quantity[U] = Quantity(-coeff, unit)
 
+    /**
+     * @throws IllegalArgumentException If the unit of other is not the same as
+     *                                  this class.
+     */
     def <(other: Quantity[U]): Boolean = {
-      if (unit != other.unit)
-        throw new QuantityException("Cannot compare quantities with different units")
-      else
-        coeff < other.coeff
+      require(unit != other.unit, "Cannot compare quantities with different units")
+
+      coeff < other.coeff
     }
 
+    /**
+     * @throws IllegalArgumentException If the unit of other is not the same as
+     *                                  this class.
+     */
     def <=(other: Quantity[U]): Boolean = (this == other) || (this < other)
 
+    /**
+     * @throws IllegalArgumentException If the unit of other is not the same as
+     *                                  this class.
+     */
     def >(other: Quantity[U]): Boolean = {
-      if (unit != other.unit)
-        throw new QuantityException("Cannot compare quantities with different units")
-      else
-        coeff > other.coeff
+      require(unit != other.unit, "Cannot compare quantities with different units")
+
+      coeff > other.coeff
     }
 
+    /**
+     * @throws IllegalArgumentException If the unit of other is not the same as
+     *                                  this class.
+     */
     def >=(other: Quantity[U]): Boolean = (this == other) || (this > other)
 
     /**
@@ -67,7 +87,9 @@ package object quantity {
      *
      * @param n The root to take (2 for the square root).
      *
-     * @return The resulting quantity if possible, otherwise None.
+     * @return The resulting quantity if possible.
+     *
+     * @throws QuantityException If the root cannot be taken.
      */
     def nroot(n: Int): Quantity[U] = unit.nroot(n) match {
       case None => throw new QuantityException("Can't take "
@@ -83,6 +105,8 @@ package object quantity {
     /**
      * Takes the square root of this unit if possible, otherwise it returns
      * None.
+     *
+     * @throws QuantityException If the square root cannot be taken.
      */
     def sqrt: Quantity[U] = nroot(2)
 
