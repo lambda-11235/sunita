@@ -20,7 +20,7 @@ package object quantity {
      *                                  this class.
      */
     def +(other: Quantity[U]): Quantity[U] = {
-      require(unit != other.unit, "Mismatched units in +")
+      require(unit == other.unit, "Mismatched units in +")
 
       Quantity(coeff + other.coeff, unit)
     }
@@ -30,7 +30,7 @@ package object quantity {
      *                                  this class.
      */
     def -(other: Quantity[U]): Quantity[U] = {
-      require(unit != other.unit, "Mismatched units in -")
+      require(unit == other.unit, "Mismatched units in -")
 
       Quantity(coeff - other.coeff, unit)
     }
