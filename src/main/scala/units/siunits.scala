@@ -12,14 +12,20 @@ package object siunits {
    * Class to represent an SI unit. The fields are the powers of the base units
    * that make up the current unit.
    */
-  case class SIUnit(
-    m: Int,
-    kg: Int,
-    s: Int,
-    a: Int,
-    k: Int,
-    mol: Int,
-    cd: Int) {
+  case class SIUnit(m: Int, kg: Int, s: Int, a: Int, k: Int, mol: Int, cd: Int) {
+
+    def applyToPowers(f: Int => Int) = SIUnit(f(m), f(kg), f(s), f(a),
+                                                      f(k), f(mol), f(cd))
+
+    def merge(other: SIUnit, joinFun: (Int, Int) => Int) = {
+      SIUnit(joinFun(m, other.m),
+             joinFun(kg, other.kg),
+             joinFun(s, other.s),
+             joinFun(a, other.a),
+             joinFun(k, other.k),
+             joinFun(mol, other.mol),
+             joinFun(cd, other.cd))
+    }
 
     def ==(other: SIUnit): Boolean = List(m == other.m,
                                           kg == other.kg,
@@ -29,29 +35,11 @@ package object siunits {
                                           mol == other.mol,
                                           cd == other.cd).reduce(_ && _)
 
-    def *(other: SIUnit): SIUnit = SIUnit(m + other.m,
-                                          kg + other.kg,
-                                          s + other.s,
-                                          a + other.a,
-                                          k + other.k,
-                                          mol + other.mol,
-                                          cd + other.cd)
+    def *(other: SIUnit): SIUnit = merge(other, ((x, y) => x + y))
 
-    def /(other: SIUnit): SIUnit = SIUnit(m - other.m,
-                                          kg - other.kg,
-                                          s - other.s,
-                                          a - other.a,
-                                          k - other.k,
-                                          mol - other.mol,
-                                          cd - other.cd)
+    def /(other: SIUnit): SIUnit = merge(other, ((x, y) => x - y))
 
-    def pow(n: Int): SIUnit = SIUnit(n * m,
-                                     n * kg,
-                                     n * s,
-                                     n * a,
-                                     n * k,
-                                     n * mol,
-                                     n * cd)
+    def pow(n: Int): SIUnit = applyToPowers(x => n * x)
 
 
     /**
@@ -73,22 +61,43 @@ package object siunits {
       }
     }
 
-    override def toString = {
-      val powers = List(m, kg, s, a, k, mol, cd)
-      val symbols = List("m", "kg", "s", "A", "K", "mol", "cd")
+    override def toString = this match {
+      case hertz.unit => "Hz"
+      case newton.unit => "N"
+      case pascal.unit => "Pa"
+      case joule.unit => "J"
+      case watt.unit => "W"
+      case coulomb.unit => "C"
+      case volt.unit => "V"
+      case farad.unit => "F"
+      case ohm.unit => "ω"
+      case siemens.unit => "S"
+      case weber.unit => "Wb"
+      case tesla.unit => "T"
+      case henry.unit => "H"
+      case lumen.unit => "lm"
+      case lux.unit => "lx"
+      case becquerel.unit => "Bq"
+      case gray.unit => "Gy"
+      case sievert.unit => "Sv"
+      case katal.unit => "kat"
+      case _ => {
+        val powers = List(m, kg, s, a, k, mol, cd)
+        val symbols = List("m", "kg", "s", "A", "K", "mol", "cd")
 
-      def asStr(power: Int, symbol: String): String = {
-        if (power == 1)
-          symbol
-        else
-          symbol ++ "^" ++ power.toString
+        def asStr(power: Int, symbol: String): String = {
+          if (power == 1)
+            symbol
+          else
+            symbol ++ "^" ++ power.toString
+        }
+
+        var combined = powers.zip(symbols)
+        combined = combined filter (_._1 != 0)
+
+        val strs = combined map (x => asStr(x._1, x._2))
+        strs.mkString(" ")
       }
-
-      var combined = powers.zip(symbols)
-      combined = combined filter (_._1 != 0)
-
-      val strs = combined map (x => asStr(x._1, x._2))
-      strs.mkString(" ")
     }
   }
 
