@@ -5,7 +5,7 @@ package sunita.unit
  * A trait that all unit systems should implicitly extend.
  */
 trait Unit[U] {
-  /** Returns true is this unit has no dimension. */
+  /** Returns the unitless unit for the unit system. */
   def unitless: U
 
   def eq(lhs: U, rhs: U): Boolean

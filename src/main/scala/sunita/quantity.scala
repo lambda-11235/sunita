@@ -103,8 +103,7 @@ package object quantity {
     }
 
     /**
-     * Takes the square root of this unit if possible, otherwise it returns
-     * None.
+     * Takes the square root of this unit if possible.
      *
      * @throws QuantityException If the square root cannot be taken.
      */
