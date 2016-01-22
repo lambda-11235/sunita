@@ -50,7 +50,7 @@ package object quantity {
      *                                  this class.
      */
     def <(other: Quantity[U]): Boolean = {
-      require(unit != other.unit, "Cannot compare quantities with different units")
+      require(unit == other.unit, "Cannot compare quantities with different units")
 
       coeff < other.coeff
     }
@@ -66,7 +66,7 @@ package object quantity {
      *                                  this class.
      */
     def >(other: Quantity[U]): Boolean = {
-      require(unit != other.unit, "Cannot compare quantities with different units")
+      require(unit == other.unit, "Cannot compare quantities with different units")
 
       coeff > other.coeff
     }
