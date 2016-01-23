@@ -9,6 +9,11 @@ import sunita.unit._
 package object siunits {
 
   /**
+   * A convenient type synonym.
+   */
+  type SIQuant = Quantity[SIUnit]
+
+  /**
    * Class to represent an SI unit. The fields are the powers of the base units
    * that make up the current unit.
    */
