@@ -177,6 +177,8 @@ package object siunits {
   val sievert = joule / kilogram
   val katal = mole / second
 
+  val liter = 0.001 * meter.pow(3)
+
   // Usefull unnamed SI units
   val siArea = meter pow 2
   val siVolume = meter pow 3
