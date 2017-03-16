@@ -11,12 +11,20 @@ while squants cannot (to the best of my knowledge).
 
 Example usage:
 ```scala
-import units.siunits._
-import units.constants._
+import sunita.SI
 
-scala> 2*meter * gravConst
-res0: units.quantity.Quantity[units.siunits.SIUnit] = 1.334856E-10 m^4 kg^-1 s^-2
+import SI.unitSys._
+import SI.Implicits._
 
-scala> pascal == (newton / meter.pow(2))
-res1: Boolean = true
+scala> meter/newton
+res0: sunita.SI.unitSys.Unit = kg^-1 s^2
+
+scala> 2*meter/newton
+res1: sunita.SI.Measurement = 2.0 kg^-1 s^2
+
+scala> 2*meter*kilogram*newton
+res2: sunita.SI.Measurement = 2.0 m^2 kg^2 s^-2
+
+scala> res2.sqrt
+res3: sunita.SI.Measurement = 1.4142135623730951 m kg s^-1
 ```
