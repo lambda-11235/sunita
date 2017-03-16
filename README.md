@@ -1,6 +1,4 @@
-======
-Sunita
-======
+# Sunita
 
 The units package is a package for doing dimensional analysis in Scala. While
 other unit analysis packages like [squants](https://github.com/garyKeorkunian/squants)
