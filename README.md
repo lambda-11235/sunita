@@ -20,3 +20,8 @@ res0: units.quantity.Quantity[units.siunits.SIUnit] = 1.334856E-10 m^4 kg^-1 s^-
 scala> pascal == (newton / meter.pow(2))
 res1: Boolean = true
 ```
+
+## Modules
+
+The modules branch contains a new (work in progress) implementation based off of
+ML modules. Please check it out!
