@@ -12,7 +12,7 @@ trait BaseUnitSystem extends UnitSystem {
 
   def zeroUnit: Unit = new Unit(Map())
 
-  protected def newBaseUnit(name: String, sym: String) = {
+  protected def newBaseUnit(name: String, sym: String): Unit = {
     new Unit(Map(BaseUnit(name, sym) -> 1))
   }
 
